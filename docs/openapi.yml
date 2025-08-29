@@ -1,0 +1,375 @@
+openapi: 3.0.0
+info:
+  title: API DevOps Inteligente
+  description: |
+    API REST que integra OpenAI para crear flujos inteligentes de DevOps.
+    
+    ## Características
+    - Integración con OpenAI GPT models
+    - Validación robusta de inputs
+    - Manejo de errores centralizado
+    - Monitoreo de salud del sistema
+    
+  version: 1.0.0
+  contact:
+    name: DevOps Team
+    email: devops@empresa.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Desarrollo local
+  - url: https://your-app.onrender.com
+    description: Producción
+
+paths:
+  /:
+    get:
+      summary: Información general de la API
+      description: Retorna información básica sobre la API y endpoints disponibles
+      responses:
+        '200':
+          description: Información de la API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "API de IA - DevOps Senior"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  endpoints:
+                    type: object
+                    properties:
+                      chat:
+                        type: string
+                        example: "POST /api/v1/chat"
+                      status:
+                        type: string
+                        example: "GET /api/v1/status"
+
+  /api/v1/chat:
+    post:
+      summary: Procesar mensaje con IA
+      description: |
+        Envía un mensaje a OpenAI y retorna la respuesta generada.
+        
+        ## Modelos soportados
+        - gpt-3.5-turbo (default)
+        - gpt-4
+        - gpt-4-turbo
+        
+        ## Límites
+        - Mensaje: máximo 4000 caracteres
+        - Rate limit: 100 requests/hora
+        
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  description: Mensaje a procesar
+                  example: "¿Cómo configurar un pipeline de CI/CD con GitHub Actions?"
+                  maxLength: 4000
+                model:
+                  type: string
+                  description: Modelo de OpenAI a utilizar
+                  example: "gpt-3.5-turbo"
+                  enum:
+                    - gpt-3.5-turbo
+                    - gpt-4
+                    - gpt-4-turbo
+                  default: gpt-3.5-turbo
+            examples:
+              devops_question:
+                summary: Pregunta sobre DevOps
+                value:
+                  message: "¿Cuáles son las mejores prácticas para Docker en producción?"
+                  model: "gpt-3.5-turbo"
+              technical_support:
+                summary: Soporte técnico
+                value:
+                  message: "Mi pipeline de GitHub Actions falla en el paso de deployment"
+                  model: "gpt-4"
+
+      responses:
+        '200':
+          description: Respuesta generada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Respuesta generada por la IA
+                        example: "Para configurar un pipeline de CI/CD con GitHub Actions..."
+                      model:
+                        type: string
+                        example: "gpt-3.5-turbo"
+                      usage:
+                        type: object
+                        properties:
+                          prompt_tokens:
+                            type: integer
+                            example: 15
+                          completion_tokens:
+                            type: integer
+                            example: 150
+                          total_tokens:
+                            type: integer
+                            example: 165
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2024-01-15T10:30:00Z"
+
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_message:
+                  summary: Mensaje faltante
+                  value:
+                    success: false
+                    error: "El campo 'message' es requerido"
+                    code: "MISSING_MESSAGE"
+                empty_message:
+                  summary: Mensaje vacío
+                  value:
+                    success: false
+                    error: "El mensaje no puede estar vacío"
+                    code: "EMPTY_MESSAGE"
+                message_too_long:
+                  summary: Mensaje muy largo
+                  value:
+                    success: false
+                    error: "El mensaje excede el límite de 4000 caracteres"
+                    code: "MESSAGE_TOO_LONG"
+
+        '401':
+          description: API Key inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: "API Key inválida"
+                code: "INVALID_KEY"
+
+        '429':
+          description: Límite de cuota excedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: "Cuota de API agotada. Intenta más tarde."
+                code: "QUOTA_EXCEEDED"
+
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/status:
+    get:
+      summary: Estado del sistema
+      description: |
+        Retorna información detallada sobre el estado de la API y servicios conectados.
+        
+        ## Información incluida
+        - Estado general del sistema
+        - Tiempo de actividad
+        - Uso de memoria
+        - Estado de servicios externos
+        - Métricas de rendimiento
+        
+      responses:
+        '200':
+          description: Estado del sistema
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        example: "active"
+                        enum:
+                          - active
+                          - degraded
+                          - maintenance
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2024-01-15T10:30:00Z"
+                      uptime:
+                        type: number
+                        description: Tiempo de actividad en segundos
+                        example: 3600
+                      memory:
+                        type: object
+                        properties:
+                          rss:
+                            type: integer
+                            description: Memoria RSS en bytes
+                          heapTotal:
+                            type: integer
+                          heapUsed:
+                            type: integer
+                          external:
+                            type: integer
+                      environment:
+                        type: string
+                        example: "production"
+                        enum:
+                          - development
+                          - test
+                          - production
+                      services:
+                        type: object
+                        properties:
+                          openai:
+                            type: string
+                            example: "connected"
+                            enum:
+                              - connected
+                              - error
+                              - not_configured
+                          database:
+                            type: string
+                            example: "not_required"
+                          external_apis:
+                            type: string
+                            example: "healthy"
+                      performance:
+                        type: object
+                        properties:
+                          response_time_ms:
+                            type: integer
+                            example: 45
+                          cpu_usage:
+                            type: object
+                          load_average:
+                            type: array
+                            items:
+                              type: number
+
+        '500':
+          description: Error verificando el estado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/status/health:
+    get:
+      summary: Health check simple
+      description: Endpoint básico para verificar que la API está respondiendo
+      responses:
+        '200':
+          description: API está funcionando
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-01-15T10:30:00Z"
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Descripción del error
+          example: "Error interno del servidor"
+        code:
+          type: string
+          description: Código de error para identificación programática
+          example: "INTERNAL_ERROR"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+  responses:
+    BadRequest:
+      description: Solicitud inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Unauthorized:
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            
+    InternalServerError:
+      description: Error interno del servidor
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: General
+    description: Endpoints generales de la API
+  - name: Chat
+    description: Integración con OpenAI para chat inteligente
+  - name: Monitoring
+    description: Monitoreo y estado del sistema
