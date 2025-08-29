@@ -1,3 +1,6 @@
+
+[![Deploy Status](https://img.shields.io/badge/deploy-active-brightgreen)](https://aiops-ew1k.onrender.com)
+[![Tests](https://github.com/amurpo/aiops/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/amurpo/aiops/actions)
 # 🤖 API DevOps Inteligente
 
 Una API REST desarrollada con Express.js que integra OpenAI para crear flujos inteligentes de DevOps con CI/CD automatizado.
