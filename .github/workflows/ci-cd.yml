@@ -34,6 +34,7 @@ jobs:
       run: npm test
       env:
         NODE_ENV: test
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         
     - name: 📊 Upload coverage reports
       if: success()
