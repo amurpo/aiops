@@ -53,6 +53,20 @@ GET /
 ```
 Información general de la API y endpoints disponibles.
 
+### 📖 Documentación Interactiva
+```
+GET /docs
+```
+Documentación Swagger UI interactiva donde puedes:
+- Ver todos los endpoints disponibles
+- Probar las APIs directamente desde el navegador
+- Ver ejemplos de requests y responses
+- Entender todos los parámetros y schemas
+
+**URLs disponibles:**
+- **Local**: `http://localhost:3000/docs`
+- **Producción**: `https://tu-servicio.onrender.com/docs`
+
 ### 💬 Chat con IA
 ```
 POST /api/v1/chat
@@ -175,6 +189,8 @@ En tu repositorio de GitHub, configura estos secrets:
 │   ├── routes/          # Rutas de la API
 │   ├── middleware/      # Middlewares personalizados
 │   └── tests/          # Tests unitarios
+├── docs/
+│   └── openapi.yml      # Documentación OpenAPI/Swagger
 ├── .github/workflows/  # GitHub Actions
 ├── server.js          # Servidor principal
 ├── .env.example       # Ejemplo de variables
@@ -198,6 +214,7 @@ En tu repositorio de GitHub, configura estos secrets:
 | `npm run dev` | Ejecuta con nodemon para desarrollo |
 | `npm test` | Ejecuta la suite de tests |
 | `npm run test:watch` | Ejecuta tests en modo watch |
+| `npm run test:coverage` | Ejecuta tests con reporte de cobertura |
 | `npm run lint` | Verifica el código con ESLint |
 | `npm run lint:fix` | Corrige automáticamente errores de ESLint |
 
