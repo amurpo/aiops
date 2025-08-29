@@ -49,17 +49,20 @@ app.use('*', (req, res) => {
   });
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-  console.log(`📖 Documentación disponible en http://localhost:${PORT}/`);
-});
-
-// Manejo graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('🔄 Cerrando servidor...');
-  server.close(() => {
-    console.log('✅ Servidor cerrado correctamente');
+// Solo iniciar servidor si no estamos en tests
+if (process.env.NODE_ENV !== 'test') {
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+    console.log(`📖 Documentación disponible en http://localhost:${PORT}/`);
   });
-});
+
+  // Manejo graceful shutdown
+  process.on('SIGTERM', () => {
+    console.log('🔄 Cerrando servidor...');
+    server.close(() => {
+      console.log('✅ Servidor cerrado correctamente');
+    });
+  });
+}
 
 module.exports = app;

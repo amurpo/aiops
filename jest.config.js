@@ -10,5 +10,8 @@ module.exports = {
     '**/src/tests/**/*.test.js'
   ],
   verbose: true,
-  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.js']
+  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.js'],
+  // Configuración para CI/CD
+  forceExit: true, // Forzar salida cuando termine
+  detectOpenHandles: true // Detectar handles abiertos
 };
