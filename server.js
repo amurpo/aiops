@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 require('dotenv').config();
 
 const chatRoutes = require('./src/routes/chat');
@@ -9,6 +11,14 @@ const { errorHandler } = require('./src/middleware/error');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Cargar documentación OpenAPI
+let swaggerDocument = YAML.load('./docs/openapi.yml');
+
+// Reemplazar variables de entorno en la documentación
+const apiBaseUrl = process.env.API_BASE_URL || 'https://aiops-ew1k.onrender.com';
+const swaggerString = JSON.stringify(swaggerDocument).replace('${API_BASE_URL}', apiBaseUrl);
+swaggerDocument = JSON.parse(swaggerString);
 
 // Middlewares de seguridad
 app.use(helmet());
@@ -21,6 +31,12 @@ app.use((req, res, next) => {
   next();
 });
 
+// Documentación Swagger
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'AI DevOps API - Documentación'
+}));
+
 // Rutas
 app.use('/api/v1/chat', chatRoutes);
 app.use('/api/v1/status', statusRoutes);
@@ -32,7 +48,12 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       chat: 'POST /api/v1/chat',
-      status: 'GET /api/v1/status'
+      status: 'GET /api/v1/status',
+      docs: 'GET /docs'
+    },
+    documentation: {
+      swagger: '/docs',
+      openapi: '/docs/openapi.json'
     }
   });
 });

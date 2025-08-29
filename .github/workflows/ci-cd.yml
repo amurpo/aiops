@@ -30,8 +30,8 @@ jobs:
     - name: 🔍 Run ESLint
       run: npm run lint
       
-    - name: 🧪 Run tests
-      run: npm test
+    - name: 🧪 Run tests with coverage
+      run: npm test -- --coverage
       env:
         NODE_ENV: test
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

@@ -21,7 +21,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Desarrollo local
-  - url: https://your-app.onrender.com
+  - url: ${API_BASE_URL}
     description: Producción
 
 paths:

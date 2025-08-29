@@ -77,3 +77,8 @@ logs
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Swagger/OpenAPI generated files
+docs/swagger-output.json
+docs/generated/
+swagger-output.json

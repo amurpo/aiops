@@ -74,6 +74,29 @@ describe('API Tests', () => {
       expect(response.body.error).toBe('El mensaje excede el límite de 4000 caracteres');
     });
 
+    it('should reject non-string message', async () => {
+      const response = await request(app)
+        .post('/api/v1/chat')
+        .send({ message: 123 })
+        .expect(400);
+        
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe('El campo "message" debe ser una cadena de texto');
+    });
+
+    it('should reject non-string model', async () => {
+      const response = await request(app)
+        .post('/api/v1/chat')
+        .send({ 
+          message: 'Hello',
+          model: 123
+        })
+        .expect(400);
+        
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe('El campo "model" debe ser una cadena de texto');
+    });
+
     it('should reject invalid model', async () => {
       const response = await request(app)
         .post('/api/v1/chat')
@@ -129,6 +152,40 @@ describe('API Tests', () => {
         
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe('JSON inválido en el cuerpo de la petición');
+    });
+
+    it('should handle large payloads', async () => {
+      const largePayload = JSON.stringify({
+        message: 'a'.repeat(15 * 1024 * 1024) // 15MB payload
+      });
+
+      const response = await request(app)
+        .post('/api/v1/chat')
+        .set('Content-Type', 'application/json')
+        .send(largePayload)
+        .expect(413);
+        
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe('El cuerpo de la petición es demasiado grande');
+    });
+  });
+
+  // Tests adicionales para coverage
+  describe('Status Error Handling', () => {
+    it('should handle OpenAI connection errors gracefully', async () => {
+      // Mock OpenAI to throw connection error
+      const originalApiKey = process.env.OPENAI_API_KEY;
+      process.env.OPENAI_API_KEY = 'invalid-key-format';
+      
+      const response = await request(app)
+        .get('/api/v1/status')
+        .expect(200);
+        
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.services.openai).toBe('error');
+      
+      // Restore API key
+      process.env.OPENAI_API_KEY = originalApiKey;
     });
   });
 });
