@@ -1,855 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Asignaci贸n de Preguntas por M贸dulo</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 20px; 
+      font-size: 14px;
+      line-height: 1.6;
+      background-color: #f8f9fa;
+    }
+    .header { 
+      text-align: center; 
+      margin-bottom: 40px; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .header h2 {
+      margin: 0;
+      font-size: 16px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    .modulo { 
+      margin-bottom: 30px; 
+      page-break-inside: avoid;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .modulo-titulo { 
+      font-size: 20px; 
+      font-weight: bold; 
+      margin: 0;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .modulo-contenido {
+      padding: 20px;
+    }
+    .persona { 
+      margin-bottom: 15px; 
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 5px solid #4facfe;
+      background-color: #f8f9ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .persona-info {
+      display: flex;
+      align-items: center;
+    }
+    .persona-nombre { 
+      font-weight: bold; 
+      font-size: 16px;
+      color: #2c3e50;
+      min-width: 100px;
+    }
+    .preguntas-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .preguntas-numeros {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .numero-pregunta {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      min-width: 30px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .contador-preguntas {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .descanso { 
+      background-color: #f5f5f5;
+      border-left-color: #bdc3c7;
+    }
+    .descanso .persona-nombre {
+      color: #7f8c8d;
+    }
+    .descanso-texto {
+      background: #95a5a6;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-style: italic;
+      font-weight: bold;
+    }
+    .resumen {
+      margin-top: 40px;
+      padding: 25px;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      border-radius: 12px;
+      page-break-inside: avoid;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .resumen h3 {
+      color: #2c3e50;
+      margin-top: 0;
+      font-size: 20px;
+    }
+    .resumen ul {
+      list-style: none;
+      padding: 0;
+    }
+    .resumen li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .resumen li:last-child {
+      border-bottom: none;
+    }
+    .fecha {
+      text-align: center;
+      color: #7f8c8d;
+      margin-top: 30px;
+      font-size: 12px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+    .control-panel {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .control-panel button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .control-panel button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    @media print {
+      body { 
+        margin: 10px; 
+        background-color: white;
+      }
+      .control-panel {
+        display: none;
+      }
+      .modulo { 
+        page-break-inside: avoid; 
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+      .header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact;
+      }
+      .numero-pregunta {
+        background: #ff6b6b !important;
+        -webkit-print-color-adjust: exact;
+      }
+      .modulo-titulo {
+        background: #4facfe !important;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>馃搵 ASIGNACI脫N DE PREGUNTAS POR M脫DULO</h1>
+    <h2>M贸dulos 3-12 | Distribuci贸n Equitativa sin Repetici贸n</h2>
+  </div>
+  
+  <div class="control-panel">
+    <button onclick="regenerarAsignacion()">馃攧 Regenerar Asignaci贸n</button>
+    <button onclick="window.print()">馃枿锔?Imprimir</button>
+  </div>
+  
+  <div id="contenido-modulos"></div>
+  
+  <div class="resumen" id="resumen-distribucion"></div>
+  
+  <div class="fecha" id="fecha-generacion"></div>
 
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Asignación de Preguntas por Módulo</title>
-        <style>
-          body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 20px; 
-            font-size: 14px;
-            line-height: 1.6;
-            background-color: #f8f9fa;
-          }
-          .header { 
-            text-align: center; 
-            margin-bottom: 40px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-          }
-          .header h1 {
-            margin: 0 0 10px 0;
-            font-size: 28px;
-            font-weight: 700;
-          }
-          .header h2 {
-            margin: 0;
-            font-size: 16px;
-            opacity: 0.9;
-            font-weight: 400;
-          }
-          .modulo { 
-            margin-bottom: 30px; 
-            page-break-inside: avoid;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-          }
-          .modulo-titulo { 
-            font-size: 20px; 
-            font-weight: bold; 
-            margin: 0;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-          }
-          .modulo-contenido {
-            padding: 20px;
-          }
-          .persona { 
-            margin-bottom: 15px; 
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 5px solid #4facfe;
-            background-color: #f8f9ff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-          .persona-info {
-            display: flex;
-            align-items: center;
-          }
-          .persona-nombre { 
-            font-weight: bold; 
-            font-size: 16px;
-            color: #2c3e50;
-            min-width: 100px;
-          }
-          .preguntas-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-          }
-          .preguntas-numeros {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-          }
-          .numero-pregunta {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-            min-width: 30px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-          }
-          .contador-preguntas {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-          }
-          .descanso { 
-            background-color: #f5f5f5;
-            border-left-color: #bdc3c7;
-          }
-          .descanso .persona-nombre {
-            color: #7f8c8d;
-          }
-          .descanso-texto {
-            background: #95a5a6;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-style: italic;
-            font-weight: bold;
-          }
-          .resumen {
-            margin-top: 40px;
-            padding: 25px;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            border-radius: 12px;
-            page-break-inside: avoid;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-          }
-          .resumen h3 {
-            color: #2c3e50;
-            margin-top: 0;
-            font-size: 20px;
-          }
-          .resumen ul {
-            list-style: none;
-            padding: 0;
-          }
-          .resumen li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-          }
-          .resumen li:last-child {
-            border-bottom: none;
-          }
-          .fecha {
-            text-align: center;
-            color: #7f8c8d;
-            margin-top: 30px;
-            font-size: 12px;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-          }
-          @media print {
-            body { 
-              margin: 10px; 
-              background-color: white;
-            }
-            .modulo { 
-              page-break-inside: avoid; 
-              box-shadow: none;
-              border: 1px solid #ddd;
-            }
-            .header {
-              background: #667eea !important;
-              -webkit-print-color-adjust: exact;
-            }
-            .numero-pregunta {
-              background: #ff6b6b !important;
-              -webkit-print-color-adjust: exact;
-            }
-            .modulo-titulo {
-              background: #4facfe !important;
-              -webkit-print-color-adjust: exact;
-            }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>📋 ASIGNACIÓN DE PREGUNTAS POR MÓDULO</h1>
-          <h2>Módulos 3-12 | Distribución Equitativa con Números Aleatorios</h2>
-        </div>
-        
-        
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 3</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona descanso">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="descanso-texto">😴 DESCANSO</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">4</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 4</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona descanso">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="descanso-texto">😴 DESCANSO</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">4</div><div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">4</div><div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 5</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">4</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona descanso">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="descanso-texto">😴 DESCANSO</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">4</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">2</div><div class="numero-pregunta">4</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 6</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">4</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona descanso">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="descanso-texto">😴 DESCANSO</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 7</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">3</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">2</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 8</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">4</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona descanso">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="descanso-texto">😴 DESCANSO</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 9</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">4</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div><div class="numero-pregunta">3</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 10</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">2</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">2</div><div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">5</div><div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">2</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 11</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">6</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">1</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">6</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-            <div class="modulo">
-              <div class="modulo-titulo">🎯 MÓDULO 12</div>
-              <div class="modulo-contenido">
-                
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Cristian</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">3</div><div class="numero-pregunta">7</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Maria</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">1 pregunta</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona descanso">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Luis</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="descanso-texto">😴 DESCANSO</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Jhonatan</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">4</div><div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-                    <div class="persona ">
-                      <div class="persona-info">
-                        <div class="persona-nombre">Daniel</div>
-                      </div>
-                      <div class="preguntas-container">
-                        <div class="preguntas-numeros">
-                            <div class="numero-pregunta">4</div><div class="numero-pregunta">5</div>
-                          </div>
-                          <div class="contador-preguntas">2 preguntas</div>
-                      </div>
-                    </div>
-                  
-              </div>
-            </div>
-          
-        
-        <div class="resumen">
-          <h3>📊 Resumen de Distribución</h3>
-          <ul>
-            <li><strong>📚 Total de módulos:</strong> 10 (Módulos 3-12)</li>
-            <li><strong>❓ Total de preguntas:</strong> 70 preguntas distribuidas</li>
-            <li><strong>👥 Participantes:</strong> Cristian, Maria, Luis, Jhonatan, Daniel</li>
-            <li><strong>⚖️ Tipo de distribución:</strong> Equitativa con descansos balanceados</li>
-            <li><strong>🎲 Asignación:</strong> Números aleatorios del 1 al 7 sin repetir</li>
-          </ul>
-        </div>
-        
-        <div class="fecha">
-          📅 Documento generado el: 5 de septiembre de 2025, 11:08
-        </div>
-      </body>
-      </html>
+  <script>
+    const participantes = ['Cristian', 'Maria', 'Luis', 'Jhonatan', 'Daniel'];
+    const modulos = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const preguntasPorModulo = 7; // Preguntas del 1 al 7
     
+    // Funci贸n para mezclar array aleatoriamente
+    function mezclarArray(array) {
+      const copia = [...array];
+      for (let i = copia.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copia[i], copia[j]] = [copia[j], copia[i]];
+      }
+      return copia;
+    }
+    
+    // Funci贸n para generar la asignaci贸n de un m贸dulo
+    function generarAsignacionModulo(numeroModulo, indiceDescanso) {
+      const preguntasDisponibles = Array.from({length: preguntasPorModulo}, (_, i) => i + 1);
+      const preguntasMezcladas = mezclarArray(preguntasDisponibles);
+      
+      const asignacion = [];
+      let indicePregunta = 0;
+      
+      for (let i = 0; i < participantes.length; i++) {
+        const participante = participantes[i];
+        
+        if (i === indiceDescanso) {
+          // Este participante descansa
+          asignacion.push({
+            nombre: participante,
+            preguntas: [],
+            descanso: true
+          });
+        } else {
+          // Asignar preguntas (1 o 2 seg煤n distribuci贸n)
+          const preguntasAsignadas = [];
+          
+          // Calcular cu谩ntas preguntas le tocan a este participante
+          const participantesActivos = participantes.length - 1; // -1 por el que descansa
+          const preguntasBase = Math.floor(preguntasPorModulo / participantesActivos);
+          const preguntasExtra = preguntasPorModulo % participantesActivos;
+          
+          // Determinar si este participante activo recibe pregunta extra
+          const participantesActivosIndex = i < indiceDescanso ? i : i - 1;
+          const numPreguntas = preguntasBase + (participantesActivosIndex < preguntasExtra ? 1 : 0);
+          
+          for (let j = 0; j < numPreguntas && indicePregunta < preguntasMezcladas.length; j++) {
+            preguntasAsignadas.push(preguntasMezcladas[indicePregunta]);
+            indicePregunta++;
+          }
+          
+          asignacion.push({
+            nombre: participante,
+            preguntas: preguntasAsignadas.sort((a, b) => a - b),
+            descanso: false
+          });
+        }
+      }
+      
+      return asignacion;
+    }
+    
+    // Funci贸n para generar toda la asignaci贸n
+    function generarAsignacionCompleta() {
+      const asignaciones = {};
+      
+      modulos.forEach((numeroModulo, index) => {
+        // Rotar el descanso entre participantes
+        const indiceDescanso = index % participantes.length;
+        asignaciones[numeroModulo] = generarAsignacionModulo(numeroModulo, indiceDescanso);
+      });
+      
+      return asignaciones;
+    }
+    
+    // Funci贸n para renderizar la asignaci贸n
+    function renderizarAsignacion(asignaciones) {
+      const contenedor = document.getElementById('contenido-modulos');
+      let html = '';
+      
+      modulos.forEach(numeroModulo => {
+        const asignacion = asignaciones[numeroModulo];
+        
+        html += `
+          <div class="modulo">
+            <div class="modulo-titulo">馃幆 M脫DULO ${numeroModulo}</div>
+            <div class="modulo-contenido">
+        `;
+        
+        asignacion.forEach(participante => {
+          if (participante.descanso) {
+            html += `
+              <div class="persona descanso">
+                <div class="persona-info">
+                  <div class="persona-nombre">${participante.nombre}</div>
+                </div>
+                <div class="preguntas-container">
+                  <div class="descanso-texto">馃槾 DESCANSO</div>
+                </div>
+              </div>
+            `;
+          } else {
+            const numerosPreguntas = participante.preguntas.map(num => 
+              `<div class="numero-pregunta">${num}</div>`
+            ).join('');
+            
+            html += `
+              <div class="persona">
+                <div class="persona-info">
+                  <div class="persona-nombre">${participante.nombre}</div>
+                </div>
+                <div class="preguntas-container">
+                  <div class="preguntas-numeros">
+                    ${numerosPreguntas}
+                  </div>
+                  <div class="contador-preguntas">${participante.preguntas.length} pregunta${participante.preguntas.length !== 1 ? 's' : ''}</div>
+                </div>
+              </div>
+            `;
+          }
+        });
+        
+        html += `
+            </div>
+          </div>
+        `;
+      });
+      
+      contenedor.innerHTML = html;
+    }
+    
+    // Funci贸n para generar el resumen
+    function generarResumen() {
+      const totalPreguntas = modulos.length * preguntasPorModulo;
+      const resumen = document.getElementById('resumen-distribucion');
+      
+      resumen.innerHTML = `
+        <h3>馃搳 Resumen de Distribuci贸n</h3>
+        <ul>
+          <li><strong>馃摎 Total de m贸dulos:</strong> ${modulos.length} (M贸dulos ${modulos[0]}-${modulos[modulos.length-1]})</li>
+          <li><strong>鉂?Total de preguntas:</strong> ${totalPreguntas} preguntas distribuidas</li>
+          <li><strong>馃懃 Participantes:</strong> ${participantes.join(', ')}</li>
+          <li><strong>鈿栵笍 Tipo de distribuci贸n:</strong> Equitativa con descansos rotatorios</li>
+          <li><strong>馃幉 Asignaci贸n:</strong> N煤meros 煤nicos del 1 al ${preguntasPorModulo} por m贸dulo</li>
+          <li><strong>鉁?Garant铆a:</strong> Sin repetici贸n de n煤meros dentro de cada m贸dulo</li>
+        </ul>
+      `;
+    }
+    
+    // Funci贸n para actualizar la fecha
+    function actualizarFecha() {
+      const fecha = document.getElementById('fecha-generacion');
+      const ahora = new Date();
+      const opciones = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      fecha.innerHTML = `馃搮 Documento generado el: ${ahora.toLocaleDateString('es-ES', opciones)}`;
+    }
+    
+    // Funci贸n para regenerar asignaci贸n
+    function regenerarAsignacion() {
+      const asignaciones = generarAsignacionCompleta();
+      renderizarAsignacion(asignaciones);
+      generarResumen();
+      actualizarFecha();
+    }
+    
+    // Inicializar la aplicaci贸n
+    document.addEventListener('DOMContentLoaded', function() {
+      regenerarAsignacion();
+    });
+  </script>
+</body>
+</html>
